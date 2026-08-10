@@ -1,9 +1,28 @@
 import os
+import asyncio
 from telethon import TelegramClient, events
-API_ID=int("35469979")
-API_HASH="896f98c871cafe2f6d064bbcbdd4930a"
-BOT_TOKEN="8764144018:AAEafolKUYuUGmuH3mQaHX6Tc77GESCr9HA"
-client=TelegramClient('s',API_ID,API_HASH).start(bot_token=BOT_TOKEN)
+from telethon.tl.functions.messages import ImportChatInviteRequest
+
+API_ID = int(os.getenv('API_ID'))
+API_HASH = os.getenv('API_HASH')
+SESSION_NAME = 'session'
+
+client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
+
 @client.on(events.NewMessage(pattern='/start'))
-async def s(e):await e.reply("ok")
+async def start(event):
+    await event.reply("اهلا! ابعتلي لينك دعوة جروب وانا هدخل فيه \nمثال: https://t.me/+xxxxxxx")
+
+@client.on(events.NewMessage(pattern='https://t.me/\\+'))
+async def join_group(event):
+    link = event.text
+    hash = link.split('+')[1]
+    try:
+        await client(ImportChatInviteRequest(hash))
+        await event.reply("✅ تم الانضمام للجروب بنجاح")
+    except Exception as e:
+        await event.reply(f"❌ فشل الانضمام: {str(e)}")
+
+print("Bot is running...")
+client.start()
 client.run_until_disconnected()
