@@ -1,10 +1,9 @@
-import os
 import asyncio
 from telethon import TelegramClient, events
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
-API_ID = int(os.getenv("35469979"))
-API_HASH = os.getenv('896f98c871cafe2f6d064bbcbdd4930a')
+API_ID = 35469979
+API_HASH = "896f98c871cafe2f6d064bbcbdd4930a"
 SESSION_NAME = 'session'
 
 client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
